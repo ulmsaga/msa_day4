@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gatewayserver-deployment
+  namespace: group1-team3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gatewayserver-app
+  template:
+    metadata:
+      labels:
+        app: gatewayserver-app
+    spec:
+      containers:
+      - name: gatewayserver-container
+        image: k8s-vga-worker1:5000/group1-team3-gatewayserver:v0.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9203
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gatewayserver-service
+  namespace: group1-team3
+spec:
+  selector:
+    app: gatewayserver-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9203
+      nodePort: 30312
+  type: NodePort
