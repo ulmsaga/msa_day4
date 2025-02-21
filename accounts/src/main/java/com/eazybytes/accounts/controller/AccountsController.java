@@ -1,5 +1,6 @@
 package com.eazybytes.accounts.controller;
 
+import java.net.InetAddress;
 import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
@@ -294,5 +295,15 @@ public class AccountsController {
                 .body(accountsContactInfoDto);
     }
 
+    @GetMapping("/getHostName")
+    public ResponseEntity<String> getHostName() {
+         String hostName = "";
+        try {
+                hostName = InetAddress.getLocalHost().getHostName();
+        } catch (Exception e) {
+                throw new RuntimeException("Error while fetching hostname");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(hostName);
+    }
 
 }
