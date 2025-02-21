@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configure-service-day4
+  namespace: group1-team3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configure-service-day4
+  template:
+    metadata:
+      labels:
+        app: configure-service-day4
+    spec:
+      containers:
+      - name: configure-service-day4
+        image: k8s-vga-worker1:5000/group1-team3-configure-service-day4:latest
+        imagePullPolicy: Always #IfNotPresent
+        ports:
+        - containerPort: 9100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configure-service-day4
+  namespace: group1-team3
+spec:
+  selector:
+    app: configure-service-day4
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9100
+      nodePort: 30360
+  type: NodePort
+
