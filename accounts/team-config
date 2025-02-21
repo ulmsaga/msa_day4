@@ -1,0 +1,5 @@
+TEAM_PREFIX=group1-team3
+NAMESPACE=group1-team3
+NODE_PORT=30316
+APP_NAME=accounts
+VERSION=0.0.1

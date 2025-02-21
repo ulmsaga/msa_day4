@@ -1,6 +1,4 @@
-prefix="group1-team3"
-app="accounts"
-ver="0.0.1"
+source ./team-config
 
 echo "mvn clean"
 mvn clean
@@ -8,11 +6,17 @@ mvn clean
 echo "mvn install"
 mvn install
 
-echo "docker build -t k8s-vga-worker1:5000/${prefix}-${app}:v${ver}"
-docker build --platform=linux/amd64 -t k8s-vga-worker1:5000/${prefix}-${app}:v${ver} ./
+echo "docker build -t k8s-vga-worker1:5000/${TEAM_PREFIX}-${APP_NAME}:v${VERSION}"
+docker build --platform=linux/amd64 -t k8s-vga-worker1:5000/${TEAM_PREFIX}-${APP_NAME}:v${VERSION} ./
 
-echo "docker push k8s-vga-worker1:5000/${prefix}-${app}:v${ver}"
-docker push k8s-vga-worker1:5000/${prefix}-${app}:v${ver}
+echo "docker push k8s-vga-worker1:5000/${TEAM_PREFIX}-${APP_NAME}:v${VERSION}"
+docker push k8s-vga-worker1:5000/${TEAM_PREFIX}-${APP_NAME}:v${VERSION}
 
-echo "kubectl apply -f accounts-k8s.yaml"
-kubectl apply -f accounts-k8s.yaml
+# Replace variables in k8s yaml template and apply
+cat accounts-k8s-template.yaml | \
+    sed "s/\${NAMESPACE}/${NAMESPACE}/g" | \
+    sed "s/\${TEAM_PREFIX}/${TEAM_PREFIX}/g" | \
+    sed "s/\${APP_NAME}/${APP_NAME}/g" | \
+    sed "s/\${VERSION}/${VERSION}/g" | \
+    sed "s/\${NODE_PORT}/${NODE_PORT}/g" | \
+    kubectl apply -f -
